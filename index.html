@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorMatch AI - A Color Theory Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        html.dark { color-scheme: dark; }
+        body { font-family: 'Inter', sans-serif; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .cta-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .cta-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
+        }
+        .color-swatch {
+            transition: transform 0.2s ease-in-out;
+        }
+        .color-swatch:hover {
+            transform: scale(1.05);
+        }
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 64px;
+            height: 64px;
+            padding: 0;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 12px; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-10">
+        
+        <!-- Main Application Wrapper -->
+        <div id="app-container">
+
+            <!-- View 1: Landing Page -->
+            <div id="view-landing" class="view active">
+                <header class="text-center mb-12">
+                     <div class="flex justify-center mb-6">
+                        <button id="theme-toggle" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                            <!-- Icon will be inserted by JS -->
+                        </button>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight">ColorMatch AI</h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3 text-lg max-w-2xl mx-auto">Color theory meets intelligent design. Generate, extract, and evaluate color palettes with ease.</p>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- CTA Cards -->
+                    <div class="cta-card text-white p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-blue-400 to-purple-500" data-view="generator">
+                        <h2 class="text-2xl font-bold mb-2">Start with a Color</h2>
+                        <p class="opacity-80">Generate palettes from a base color using classic color theory.</p>
+                    </div>
+                    <div class="cta-card text-white p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-yellow-400 via-red-500 to-pink-500" data-view="mood">
+                        <h2 class="text-2xl font-bold mb-2">Suggest by Mood</h2>
+                        <p class="opacity-80">Get palette ideas from keywords like "calm" or "luxury".</p>
+                    </div>
+                    <div class="cta-card text-white p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-green-400 to-teal-500" data-view="image">
+                        <h2 class="text-2xl font-bold mb-2">Extract from Image</h2>
+                        <p class="opacity-80">Upload an image to extract its dominant color palette.</p>
+                    </div>
+                    <div class="cta-card text-slate-800 p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-slate-100 to-slate-300" data-view="accessibility">
+                        <h2 class="text-2xl font-bold mb-2">Accessibility Checker</h2>
+                        <p class="text-slate-600">Check color contrast against WCAG guidelines.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 2: Palette Generator -->
+            <div id="view-generator" class="view">
+                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Palette Generator</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                        <h2 class="text-xl font-semibold mb-4">Base Color</h2>
+                        <div class="flex items-center gap-4">
+                            <input type="color" id="gen-color-picker" value="#3498db">
+                            <input type="text" id="gen-hex-input" value="#3498db" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-center font-mono bg-white dark:bg-slate-700">
+                        </div>
+                    </div>
+                    <div id="gen-palettes-container" class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg space-y-6">
+                        <!-- Generated palettes appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 3: Mood Suggester -->
+            <div id="view-mood" class="view">
+                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Mood-Based Suggestions</h1>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+                    <h2 class="text-xl font-semibold mb-4">Enter a mood or keyword</h2>
+                    <div class="flex gap-2">
+                        <input type="text" id="mood-input" placeholder="e.g., playful, professional, danger" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700">
+                        <button id="mood-btn" class="p-3 bg-slate-800 dark:bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-900 dark:hover:bg-slate-600">Suggest</button>
+                    </div>
+                </div>
+                <div id="mood-palette-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg min-h-[10rem]">
+                    <!-- Mood palette appears here -->
+                </div>
+            </div>
+
+            <!-- View 4: Image Extractor -->
+            <div id="view-image" class="view">
+                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Extract Palette from Image</h1>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+                    <h2 class="text-xl font-semibold mb-4">Upload an Image</h2>
+                    <input type="file" id="image-upload" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 dark:file:bg-slate-700 file:text-slate-700 dark:file:text-slate-200 hover:file:bg-slate-200 dark:hover:file:bg-slate-600"/>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div id="image-preview-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg flex justify-center items-center h-80">
+                        <p class="text-slate-400 dark:text-slate-500">Image preview will appear here</p>
+                    </div>
+                    <div id="image-palette-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg h-80">
+                        <h3 class="text-lg font-semibold mb-3">Extracted Palette</h3>
+                        <!-- Extracted palette appears here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 5: Accessibility Checker -->
+            <div id="view-accessibility" class="view">
+                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Accessibility Checker</h1>
+                 <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                        <div class="flex flex-col items-center">
+                            <label for="acc-text-color" class="mb-2 font-semibold">Text Color</label>
+                            <input type="color" id="acc-text-color" value="#FFFFFF">
+                        </div>
+                        <div id="acc-result-container" class="text-center">
+                            <!-- Contrast result appears here -->
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <label for="acc-bg-color" class="mb-2 font-semibold">Background Color</label>
+                            <input type="color" id="acc-bg-color" value="#3498db">
+                        </div>
+                    </div>
+                    <div id="acc-preview" class="mt-6 p-8 rounded-lg text-center border-2 border-dashed border-slate-300 dark:border-slate-600">
+                        <p id="acc-preview-text-normal" class="text-lg">The quick brown fox jumps over the lazy dog.</p>
+                        <p id="acc-preview-text-large" class="text-2xl font-bold mt-2">The quick brown fox.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const views = document.querySelectorAll('.view');
+            const ctaCards = document.querySelectorAll('.cta-card');
+            const backBtns = document.querySelectorAll('.back-btn');
+            const themeToggle = document.getElementById('theme-toggle');
+
+            // --- DATA (Simulated ML) ---
+            const moodPalettes = {
+                'calm': ['#E0E7FF', '#C7D2FE', '#A5B4FC', '#818CF8', '#6366F1'],
+                'luxury': ['#1a1a1a', '#4a4a4a', '#d4af37', '#f0e68c', '#ffffff'],
+                'energetic': ['#FF4E50', '#FC913A', '#F9D423', '#EDE574', '#E1F5C4'],
+                'tech': ['#0A2647', '#144272', '#205295', '#2C74B3', '#FFFFFF'],
+                'romantic': ['#FFC0CB', '#FF69B4', '#DB7093', '#C71585', '#8B008B'],
+                'playful': ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D'],
+                'professional': ['#011f4b', '#03396c', '#005b96', '#6497b1', '#b3cde0'],
+                'danger': ['#000000', '#580000', '#a10000', '#e00000', '#ff4d4d'],
+                'vintage': ['#D4B996', '#A07C5B', '#6F5B3E', '#4A3F35', '#EAE0D5'],
+                'futuristic': ['#00FFFF', '#7DF9FF', '#A7FCFF', '#C4FAF8', '#FFFFFF'],
+                'natural': ['#556B2F', '#8FBC8F', '#2E8B57', '#3CB371', '#98FB98'],
+                'corporate': ['#004080', '#0055A4', '#B0C4DE', '#F0F8FF', '#778899'],
+                'minimalist': ['#FFFFFF', '#F5F5F5', '#E8E8E8', '#DCDCDC', '#36454F']
+            };
+            
+            // --- THEME MANAGEMENT ---
+            let currentTheme = localStorage.getItem('theme') || 'light';
+            
+            function applyTheme() {
+                if (currentTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeToggle.innerHTML = `☀️`;
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeToggle.innerHTML = `🌙`;
+                }
+            }
+
+            themeToggle.addEventListener('click', () => {
+                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', currentTheme);
+                applyTheme();
+            });
+
+            // --- NAVIGATION ---
+            function showView(viewId) {
+                views.forEach(view => {
+                    view.classList.remove('active');
+                    if (view.id === `view-${viewId}`) {
+                        view.classList.add('active');
+                    }
+                });
+                window.scrollTo(0, 0);
+            }
+
+            ctaCards.forEach(card => {
+                card.addEventListener('click', () => showView(card.dataset.view));
+            });
+
+            backBtns.forEach(btn => {
+                btn.addEventListener('click', () => showView('landing'));
+            });
+
+            // --- SHARED FUNCTIONS ---
+            function createPaletteUI(colors, container) {
+                container.innerHTML = '';
+                const swatchesDiv = document.createElement('div');
+                swatchesDiv.className = 'grid grid-cols-1 sm:grid-cols-5 gap-4';
+                
+                colors.forEach(hex => {
+                    const swatchWrapper = document.createElement('div');
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch h-20 rounded-lg border border-slate-200 dark:border-slate-700 flex justify-center items-center text-white font-bold text-lg';
+                    swatch.style.backgroundColor = hex;
+                    swatch.addEventListener('click', () => {
+                        navigator.clipboard.writeText(hex).then(() => {
+                            swatch.textContent = 'Copied!';
+                            setTimeout(() => { swatch.textContent = '' }, 1000);
+                        });
+                    });
+                    
+                    const hexLabel = document.createElement('p');
+                    hexLabel.textContent = hex;
+                    hexLabel.className = 'text-center text-sm text-slate-500 dark:text-slate-400 mt-2 font-mono';
+                    
+                    swatchWrapper.appendChild(swatch);
+                    swatchWrapper.appendChild(hexLabel);
+                    swatchesDiv.appendChild(swatchWrapper);
+                });
+                container.appendChild(swatchesDiv);
+            }
+
+            // --- PATH A: GENERATOR ---
+            const genColorPicker = document.getElementById('gen-color-picker');
+            const genHexInput = document.getElementById('gen-hex-input');
+            const genPalettesContainer = document.getElementById('gen-palettes-container');
+
+            function updateGeneratorView(color) {
+                if (!chroma.valid(color)) return;
+                const baseColor = chroma(color);
+                genColorPicker.value = baseColor.hex();
+                genHexInput.value = baseColor.hex();
+                
+                genPalettesContainer.innerHTML = '';
+                const generators = [
+                    { name: 'Analogous', colors: chroma.scale([baseColor.set('hsl.h', '-=30'), baseColor, baseColor.set('hsl.h', '+=30')]).mode('lch').colors(5) },
+                    { name: 'Monochromatic', colors: chroma.scale([baseColor.darken(2), baseColor, baseColor.brighten(2)]).mode('lch').colors(5) },
+                    { name: 'Complementary', colors: [baseColor.hex(), baseColor.set('hsl.h', '+=180').hex()] },
+                    { name: 'Triadic', colors: [baseColor.hex(), baseColor.set('hsl.h', '+=120').hex(), baseColor.set('hsl.h', '-=120').hex()] },
+                ];
+                
+                generators.forEach(gen => {
+                    const title = document.createElement('h3');
+                    title.textContent = gen.name;
+                    title.className = 'text-lg font-semibold mb-3 text-slate-700 dark:text-slate-300';
+                    genPalettesContainer.appendChild(title);
+                    const container = document.createElement('div');
+                    createPaletteUI(gen.colors.map(c => chroma(c).hex()), container);
+                    genPalettesContainer.appendChild(container);
+                });
+            }
+            genColorPicker.addEventListener('input', (e) => updateGeneratorView(e.target.value));
+            genHexInput.addEventListener('change', (e) => updateGeneratorView(e.target.value));
+            
+            // --- PATH B: MOOD ---
+            const moodInput = document.getElementById('mood-input');
+            const moodBtn = document.getElementById('mood-btn');
+            const moodPaletteContainer = document.getElementById('mood-palette-container');
+
+            function suggestFromMood() {
+                const mood = moodInput.value.toLowerCase().trim();
+                const palette = Object.keys(moodPalettes).find(key => key.includes(mood));
+                if (moodPalettes[palette]) {
+                    createPaletteUI(moodPalettes[palette], moodPaletteContainer);
+                } else {
+                    moodPaletteContainer.innerHTML = `<p class="text-red-500">Mood not found. Try one of the many available suggestions!</p>`;
+                }
+            }
+            moodBtn.addEventListener('click', suggestFromMood);
+            moodInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') suggestFromMood();
+            });
+
+            // --- PATH C: IMAGE EXTRACTION ---
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreviewContainer = document.getElementById('image-preview-container');
+            const imagePaletteContainer = document.getElementById('image-palette-container');
+
+            imageUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        imagePreviewContainer.innerHTML = '';
+                        img.className = 'max-w-full max-h-full object-contain rounded-lg';
+                        imagePreviewContainer.appendChild(img);
+                        extractColors(img);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            function extractColors(img) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                const colorCounts = {};
+                
+                // Simplified pixel sampling
+                for (let i = 0; i < imageData.length; i += 32) { // Sample pixels
+                    const r = imageData[i];
+                    const g = imageData[i + 1];
+                    const b = imageData[i + 2];
+                    const hex = chroma(r, g, b).hex();
+                    colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+                }
+
+                const sortedColors = Object.keys(colorCounts).sort((a, b) => colorCounts[b] - colorCounts[a]);
+                const palette = sortedColors.slice(0, 5);
+                createPaletteUI(palette, imagePaletteContainer);
+            }
+            
+            // --- PATH D: ACCESSIBILITY ---
+            const accTextColor = document.getElementById('acc-text-color');
+            const accBgColor = document.getElementById('acc-bg-color');
+            const accResultContainer = document.getElementById('acc-result-container');
+            const accPreviewTextNormal = document.getElementById('acc-preview-text-normal');
+            const accPreviewTextLarge = document.getElementById('acc-preview-text-large');
+
+            function checkContrast() {
+                const textColor = accTextColor.value;
+                const bgColor = accBgColor.value;
+                const ratio = chroma.contrast(textColor, bgColor).toFixed(2);
+                
+                let levelNormal = { text: 'Fail', color: 'text-red-500' };
+                if (ratio >= 4.5) levelNormal = { text: 'Pass (AA)', color: 'text-green-600' };
+                
+                let levelLarge = { text: 'Fail', color: 'text-red-500' };
+                if (ratio >= 3) levelLarge = { text: 'Pass (AA)', color: 'text-green-600' };
+
+                accResultContainer.innerHTML = `
+                    <div class="font-bold text-4xl mb-2">${ratio}</div>
+                    <div class="text-sm">Normal Text: <span class="${levelNormal.color}">${levelNormal.text}</span></div>
+                    <div class="text-sm">Large Text: <span class="${levelLarge.color}">${levelLarge.text}</span></div>
+                `;
+                
+                accPreviewTextNormal.style.color = textColor;
+                accPreviewTextLarge.style.color = textColor;
+                document.getElementById('acc-preview').style.backgroundColor = bgColor;
+            }
+            accTextColor.addEventListener('input', checkContrast);
+            accBgColor.addEventListener('input', checkContrast);
+
+            // --- INITIALIZATION ---
+            applyTheme();
+            updateGeneratorView('#3498db');
+            checkContrast();
+        });
+    </script>
+</body>
+</html>
