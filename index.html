@@ -40,7 +40,7 @@
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 12px; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-200">
 
     <div class="container mx-auto p-4 sm:p-6 md:p-10">
         
@@ -51,12 +51,12 @@
             <div id="view-landing" class="view active">
                 <header class="text-center mb-12">
                      <div class="flex justify-center mb-6">
-                        <button id="theme-toggle" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                        <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
                             <!-- Icon will be inserted by JS -->
                         </button>
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight">ColorMatch AI</h1>
-                    <p class="text-slate-500 dark:text-slate-400 mt-3 text-lg max-w-2xl mx-auto">Color theory meets intelligent design. Generate, extract, and evaluate color palettes with ease.</p>
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight">ColorMatch AI</h1>
+                    <p class="text-gray-500 dark:text-gray-400 mt-3 text-lg max-w-2xl mx-auto">Color theory meets intelligent design. Generate, extract, and evaluate color palettes with ease.</p>
                 </header>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- CTA Cards -->
@@ -72,26 +72,26 @@
                         <h2 class="text-2xl font-bold mb-2">Extract from Image</h2>
                         <p class="opacity-80">Upload an image to extract its dominant color palette.</p>
                     </div>
-                    <div class="cta-card text-slate-800 p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-slate-100 to-slate-300" data-view="accessibility">
+                    <div class="cta-card text-gray-800 p-6 rounded-2xl shadow-lg cursor-pointer bg-gradient-to-br from-gray-100 to-gray-300" data-view="accessibility">
                         <h2 class="text-2xl font-bold mb-2">Accessibility Checker</h2>
-                        <p class="text-slate-600">Check color contrast against WCAG guidelines.</p>
+                        <p class="text-gray-600">Check color contrast against WCAG guidelines.</p>
                     </div>
                 </div>
             </div>
 
             <!-- View 2: Palette Generator -->
             <div id="view-generator" class="view">
-                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
-                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Palette Generator</h1>
+                <button class="back-btn mb-6 font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Palette Generator</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div class="lg:col-span-1 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
                         <h2 class="text-xl font-semibold mb-4">Base Color</h2>
                         <div class="flex items-center gap-4">
                             <input type="color" id="gen-color-picker" value="#3498db">
-                            <input type="text" id="gen-hex-input" value="#3498db" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-center font-mono bg-white dark:bg-slate-700">
+                            <input type="text" id="gen-hex-input" value="#3498db" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg text-center font-mono bg-white dark:bg-gray-800">
                         </div>
                     </div>
-                    <div id="gen-palettes-container" class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg space-y-6">
+                    <div id="gen-palettes-container" class="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg space-y-6">
                         <!-- Generated palettes appear here -->
                     </div>
                 </div>
@@ -99,33 +99,33 @@
 
             <!-- View 3: Mood Suggester -->
             <div id="view-mood" class="view">
-                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
-                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Mood-Based Suggestions</h1>
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+                <button class="back-btn mb-6 font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Mood-Based Suggestions</h1>
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg mb-8">
                     <h2 class="text-xl font-semibold mb-4">Enter a mood or keyword</h2>
                     <div class="flex gap-2">
-                        <input type="text" id="mood-input" placeholder="e.g., playful, professional, danger" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700">
-                        <button id="mood-btn" class="p-3 bg-slate-800 dark:bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-900 dark:hover:bg-slate-600">Suggest</button>
+                        <input type="text" id="mood-input" placeholder="e.g., playful, professional, danger" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                        <button id="mood-btn" class="p-3 bg-gray-800 dark:bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-900 dark:hover:bg-gray-600">Suggest</button>
                     </div>
                 </div>
-                <div id="mood-palette-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg min-h-[10rem]">
+                <div id="mood-palette-container" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg min-h-[10rem]">
                     <!-- Mood palette appears here -->
                 </div>
             </div>
 
             <!-- View 4: Image Extractor -->
             <div id="view-image" class="view">
-                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
-                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Extract Palette from Image</h1>
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg mb-8">
+                <button class="back-btn mb-6 font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Extract Palette from Image</h1>
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg mb-8">
                     <h2 class="text-xl font-semibold mb-4">Upload an Image</h2>
-                    <input type="file" id="image-upload" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 dark:file:bg-slate-700 file:text-slate-700 dark:file:text-slate-200 hover:file:bg-slate-200 dark:hover:file:bg-slate-600"/>
+                    <input type="file" id="image-upload" accept="image/png, image/jpeg" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 dark:file:bg-gray-800 file:text-gray-700 dark:file:text-gray-200 hover:file:bg-gray-200 dark:hover:file:bg-gray-700"/>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div id="image-preview-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg flex justify-center items-center h-80">
-                        <p class="text-slate-400 dark:text-slate-500">Image preview will appear here</p>
+                    <div id="image-preview-container" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg flex justify-center items-center h-80">
+                        <p class="text-gray-400 dark:text-gray-500">Image preview will appear here</p>
                     </div>
-                    <div id="image-palette-container" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg h-80">
+                    <div id="image-palette-container" class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg h-80">
                         <h3 class="text-lg font-semibold mb-3">Extracted Palette</h3>
                         <!-- Extracted palette appears here -->
                     </div>
@@ -134,9 +134,9 @@
 
             <!-- View 5: Accessibility Checker -->
             <div id="view-accessibility" class="view">
-                <button class="back-btn mb-6 font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">&larr; Back to Home</button>
-                <h1 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white">Accessibility Checker</h1>
-                 <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                <button class="back-btn mb-6 font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">&larr; Back to Home</button>
+                <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Accessibility Checker</h1>
+                 <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                         <div class="flex flex-col items-center">
                             <label for="acc-text-color" class="mb-2 font-semibold">Text Color</label>
@@ -150,7 +150,7 @@
                             <input type="color" id="acc-bg-color" value="#3498db">
                         </div>
                     </div>
-                    <div id="acc-preview" class="mt-6 p-8 rounded-lg text-center border-2 border-dashed border-slate-300 dark:border-slate-600">
+                    <div id="acc-preview" class="mt-6 p-8 rounded-lg text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
                         <p id="acc-preview-text-normal" class="text-lg">The quick brown fox jumps over the lazy dog.</p>
                         <p id="acc-preview-text-large" class="text-2xl font-bold mt-2">The quick brown fox.</p>
                     </div>
@@ -193,7 +193,7 @@
                     themeToggle.innerHTML = `☀️`;
                 } else {
                     document.documentElement.classList.remove('dark');
-                    themeToggle.innerHTML = `🌙`;
+                    themeToggle.innerHTML = `�`;
                 }
             }
 
@@ -231,7 +231,7 @@
                 colors.forEach(hex => {
                     const swatchWrapper = document.createElement('div');
                     const swatch = document.createElement('div');
-                    swatch.className = 'color-swatch h-20 rounded-lg border border-slate-200 dark:border-slate-700 flex justify-center items-center text-white font-bold text-lg';
+                    swatch.className = 'color-swatch h-20 rounded-lg border border-gray-200 dark:border-gray-800 flex justify-center items-center text-white font-bold text-lg';
                     swatch.style.backgroundColor = hex;
                     swatch.addEventListener('click', () => {
                         navigator.clipboard.writeText(hex).then(() => {
@@ -242,7 +242,7 @@
                     
                     const hexLabel = document.createElement('p');
                     hexLabel.textContent = hex;
-                    hexLabel.className = 'text-center text-sm text-slate-500 dark:text-slate-400 mt-2 font-mono';
+                    hexLabel.className = 'text-center text-sm text-gray-500 dark:text-gray-400 mt-2 font-mono';
                     
                     swatchWrapper.appendChild(swatch);
                     swatchWrapper.appendChild(hexLabel);
@@ -273,7 +273,7 @@
                 generators.forEach(gen => {
                     const title = document.createElement('h3');
                     title.textContent = gen.name;
-                    title.className = 'text-lg font-semibold mb-3 text-slate-700 dark:text-slate-300';
+                    title.className = 'text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300';
                     genPalettesContainer.appendChild(title);
                     const container = document.createElement('div');
                     createPaletteUI(gen.colors.map(c => chroma(c).hex()), container);
